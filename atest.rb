@@ -1,3 +1,33 @@
+the_final_cart = [
+  {:item => "CHEESE", :price => 6.50, :clearance => false, :count => 4},
+  {:item => "AVOCADO", :price => 3.00, :clearance => true, :count => 3}
+  ]
+
+the_final_coupon =    [
+      {:item => "AVOCADO", :num => 2, :cost => 5.00},
+      {:item => "CHEESE", :num => 3, :cost => 15.00}
+    ]
+    
+avo_coupon = [
+  {:item => "AVOCADO", :num => 2, :cost => 5.00}
+  ]
+  
+das_cart = [
+ {:item => "SOY MILK", :price => 4.50, :clearance => true},
+ {:item => "AVOCADO", :price => 3.00, :clearance => true},
+ {:item => "AVOCADO", :price => 3.00, :clearance => true},
+ {:item => "CHEESE", :price => 6.50, :clearance => false},
+ {:item => "CHEESE", :price => 6.50, :clearance => false},
+ {:item => "CHEESE", :price => 6.50, :clearance => false}
+]
+
+das_cart_two = [
+  {:item => "SOY MILK", :price => 4.50, :clearance => true, :count => 1},
+  {:item => "AVOCADO", :price => 3.00, :clearance => true, :count => 2},
+  {:item => "CHEESE", :price => 6.50, :clearance => false, :count => 3}
+  ]
+
+
 def find_item_by_name_in_collection(name, collection)
   # Implement me first!
   #
@@ -45,17 +75,19 @@ def apply_coupons(cart, coupons)
   #
   # REMEMBER: This method **should** update cart
   
-   if coupons == []
+  if coupons == []
     return cart
   end  
   
+  #1 Find items on cart that has coupons
   list_of_items = create_array_of_items(cart)
   couponed_items = create_array_of_items(coupons)
   c_index = 0
   while c_index < couponed_items.length do
     l_index = 0
     while l_index < list_of_items.length do 
-      if couponed_items[c_index] == list_of_items[l_index] && cart[l_index][:count] >= coupons[c_index][:num]
+      puts couponed_items[c_index] == list_of_items[l_index]
+      if couponed_items[c_index] == list_of_items[l_index]
         with_coupon_hash = {}
         with_coupon_hash[:item] = "#{couponed_items[c_index]} W/COUPON"
         with_coupon_hash[:price] = coupons[c_index][:cost] / coupons[c_index][:num]
@@ -64,6 +96,10 @@ def apply_coupons(cart, coupons)
   
         cart[l_index][:count] -=  coupons[c_index][:num]
         l_index += 1
+        
+        puts "==============="
+        puts with_coupon_hash
+        puts "==============="
         
         check_index = 0 
          while check_index < cart.length do
@@ -74,7 +110,11 @@ def apply_coupons(cart, coupons)
            end
            check_index += 1
          end
-
+         
+         puts "++++++++++++"
+         pp t_f_list
+         puts "++++++++++++"
+         
          if t_f_list == nil
            cart << with_coupon_hash
          else 
@@ -86,50 +126,15 @@ def apply_coupons(cart, coupons)
     end
     c_index += 1
   end
-  cart
-end
-
-def apply_clearance(cart)
-  # Consult README for inputs and outputs
-  #
-  # REMEMBER: This method **should** update cart
-  index = 0 
-  while index < cart.length do 
-    if cart[index][:clearance] == true
-      twenty_percent = cart[index][:price] / 5
-      cart[index][:price] -= twenty_percent
-    end
-    index += 1
+  final_index = 0 
+  while final_index < cart.length do 
+    if cart[final_index][:count] != 0 
+      final_index += 1 
+    else 
+      cart.delete_at(final_index)
+    end  
   end
   cart
 end
 
-def checkout(cart, coupons)
-  # Consult README for inputs and outputs
-  #
-  # This method should call
-  # * consolidate_cart
-  # * apply_coupons
-  # * apply_clearance
-  #
-  # BEFORE it begins the work of calculating the total (or else you might have
-  # some irritated customers
-  
-  consolidate = consolidate_cart(cart)
-  coupons = apply_coupons(consolidate, coupons)
-  clearance = apply_clearance(coupons)
-  
-  total = 0 
-  index = 0 
-  while index < clearance.length do
-    total += clearance[index][:price] * clearance[index][:count]
-    index += 1
-  end  
-  
-  if total <= 100 
-    return total
-  end
-  ten_percent = total / 10
-  final = total - ten_percent
-  final
-end
+pp apply_coupons(das_cart_two, the_final_coupon)
