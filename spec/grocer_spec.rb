@@ -160,7 +160,9 @@ describe "Grocer" do
         ]
         consolidated_cart = consolidate_cart(cart)
         test_coupons = [coupons.first, coupons.last]
-
+        puts "kym"
+        puts test_coupons
+        puts consolidated_cart
         coupon_applied_cart = apply_coupons(consolidated_cart, test_coupons)
 
         cheese = find_item_by_name_in_collection("CHEESE", coupon_applied_cart)
